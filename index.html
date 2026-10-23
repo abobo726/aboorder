@@ -3,2195 +3,411 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>📦 開團訂單管理</title>
-
+<title>📦 開團訂單管理｜雲端版</title>
 <style>
-* {
-    box-sizing: border-box;
-}
-
-body {
-    margin: 0;
-    background: #f3f4f6;
-    color: #333;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
-                 "Microsoft JhengHei", sans-serif;
-}
-
-button,
-input,
-select,
-textarea {
-    font-family: inherit;
-}
-
-button {
-    cursor: pointer;
-}
-
-.container {
-    max-width: 1800px;
-    margin: auto;
-    padding: 24px;
-}
-
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 20px;
-    margin-bottom: 20px;
-}
-
-.title {
-    margin: 0;
-    font-size: 30px;
-}
-
-.subtitle {
-    color: #777;
-    margin-top: 6px;
-    font-size: 14px;
-}
-
-.btn {
-    border: 0;
-    border-radius: 8px;
-    padding: 10px 16px;
-    font-size: 14px;
-    font-weight: bold;
-}
-
-.btn-blue {
-    background: #2563eb;
-    color: white;
-}
-
-.btn-blue:hover {
-    background: #1d4ed8;
-}
-
-.btn-gray {
-    background: #555;
-    color: white;
-}
-
-.btn-red {
-    background: #dc2626;
-    color: white;
-}
-
-.btn-green {
-    background: #16a34a;
-    color: white;
-}
-
-.stats {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-    margin-bottom: 20px;
-}
-
-.stat {
-    background: white;
-    border-radius: 10px;
-    padding: 18px;
-    box-shadow: 0 1px 4px rgba(0,0,0,.08);
-}
-
-.stat-label {
-    color: #777;
-    font-size: 14px;
-}
-
-.stat-number {
-    font-size: 25px;
-    font-weight: bold;
-    margin-top: 5px;
-}
-
-.filters {
-    background: white;
-    padding: 15px;
-    border-radius: 10px;
-    margin-bottom: 20px;
-
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr auto;
-    gap: 10px;
-}
-
-input,
-select,
-textarea {
-    border: 1px solid #d1d5db;
-    border-radius: 7px;
-    padding: 8px 10px;
-    background: white;
-    font-size: 14px;
-}
-
-input:focus,
-select:focus,
-textarea:focus {
-    border-color: #2563eb;
-    outline: none;
-}
-
-.table-box {
-    background: white;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 1px 4px rgba(0,0,0,.08);
-}
-
-.table-scroll {
-    overflow-x: auto;
-}
-
-table {
-    border-collapse: collapse;
-    width: 100%;
-    min-width: 1450px;
-}
-
-th {
-    background: #f9fafb;
-    font-weight: bold;
-    font-size: 14px;
-    padding: 12px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-    white-space: nowrap;
-}
-
-td {
-    padding: 10px;
-    border-bottom: 1px solid #eee;
-    vertical-align: top;
-}
-
-tr:hover td {
-    background: #fafafa;
-}
-
-.group-input {
-    width: 140px;
-}
-
-.name-input {
-    width: 100px;
-}
-
-.amount-input,
-.topup-input {
-    width: 85px;
-    text-align: right;
-}
-
-.method-select {
-    width: 95px;
-}
-
-.ship-input {
-    width: 125px;
-}
-
-.note-input {
-    width: 170px;
-    min-height: 50px;
-    resize: vertical;
-}
-
-.products {
-    min-width: 380px;
-}
-
-.product-item {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    margin-bottom: 5px;
-}
-
-.product-check {
-    width: 18px;
-    height: 18px;
-    flex-shrink: 0;
-    cursor: pointer;
-}
-
-.product-name {
-    width: 200px;
-}
-
-.quantity {
-    width: 55px;
-}
-
-.product-name.arrived {
-    text-decoration: line-through;
-    opacity: .5;
-}
-
-.delete-product {
-    border: 0;
-    background: none;
-    color: #ef4444;
-    font-size: 18px;
-    padding: 0 4px;
-}
-
-.add-product {
-    border: 0;
-    background: none;
-    color: #2563eb;
-    padding: 4px 0;
-    font-size: 13px;
-}
-
-.empty {
-    text-align: center;
-    padding: 50px;
-    color: #999;
-}
-
-.bottom-buttons {
-    margin-top: 18px;
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-}
-
-.file-input {
-    display: none;
-}
-
-@media (max-width: 800px) {
-
-    .container {
-        padding: 12px;
-    }
-
-    .header {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .stats {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .filters {
-        grid-template-columns: 1fr;
-    }
-
-    .title {
-        font-size: 24px;
-    }
-}
+*{box-sizing:border-box}
+body{margin:0;background:#f3f4f6;color:#333;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft JhengHei",sans-serif}
+button,input,select,textarea{font-family:inherit}button{cursor:pointer}
+.container{max-width:1800px;margin:auto;padding:24px}
+.header{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:20px}
+.title{margin:0;font-size:30px}.subtitle{color:#777;margin-top:6px;font-size:14px}
+.btn{border:0;border-radius:8px;padding:10px 16px;font-size:14px;font-weight:bold}
+.btn-blue{background:#2563eb;color:white}.btn-blue:hover{background:#1d4ed8}.btn-gray{background:#555;color:white}.btn-red{background:#dc2626;color:white}.btn-green{background:#16a34a;color:white}
+input,select,textarea{border:1px solid #d1d5db;border-radius:7px;padding:8px 10px;background:white;font-size:14px}
+input:focus,select:focus,textarea:focus{border-color:#2563eb;outline:none}
+.login-card,.stat,.filters,.table-box,.account-bar{background:white;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.login-card{max-width:440px;margin:35px auto;padding:24px}.login-card h2{margin-top:0}.login-card input{width:100%;margin:6px 0 12px}.login-card .btn{width:100%;margin-top:6px}
+.status{padding:10px 12px;border-radius:8px;background:#eef2ff;color:#3730a3;margin:12px 0;font-size:14px;white-space:pre-wrap}
+.account-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:12px 15px;margin-bottom:18px}
+.hidden{display:none!important}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.stat{padding:18px}.stat-label{color:#777;font-size:14px}.stat-number{font-size:25px;font-weight:bold;margin-top:5px}
+.filters{padding:15px;margin-bottom:20px;display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:10px}
+.table-box{overflow:hidden}.table-scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:1450px}th{background:#f9fafb;font-weight:bold;font-size:14px;padding:12px;text-align:left;border-bottom:1px solid #ddd;white-space:nowrap}
+td{padding:10px;border-bottom:1px solid #eee;vertical-align:top}tr:hover td{background:#fafafa}
+.group-input{width:140px}.name-input{width:100px}.amount-input,.topup-input{width:85px;text-align:right}.method-select{width:95px}.ship-input{width:125px}.note-input{width:170px;min-height:50px;resize:vertical}
+.products{min-width:380px}.product-item{display:flex;align-items:center;gap:5px;margin-bottom:5px}.product-check{width:18px;height:18px;flex-shrink:0;cursor:pointer}.product-name{width:200px}.quantity{width:55px}.product-name.arrived{text-decoration:line-through;opacity:.5}
+.delete-product{border:0;background:none;color:#ef4444;font-size:18px;padding:0 4px}.add-product{border:0;background:none;color:#2563eb;padding:4px 0;font-size:13px}
+.empty{text-align:center;padding:50px;color:#999}.bottom-buttons{margin-top:18px;display:flex;gap:8px;flex-wrap:wrap}.file-input{display:none}
+.small-help{font-size:13px;color:#666;line-height:1.6}.warning{color:#b45309}.ok{color:#15803d}
+@media(max-width:800px){.container{padding:12px}.header{flex-direction:column;align-items:stretch}.stats{grid-template-columns:repeat(2,1fr)}.filters{grid-template-columns:1fr}.title{font-size:24px}}
 </style>
 </head>
-
 <body>
-
 <div class="container">
+  <section id="loginSection" class="login-card">
+    <h2>📦 開團訂單管理</h2>
+    <p class="subtitle">請使用已受邀的帳號登入。此頁面不提供公開註冊。</p>
+    <label for="emailInput">電子郵件</label>
+    <input id="emailInput" type="email" autocomplete="username" placeholder="受邀帳號的 Email">
+    <label for="passwordInput">密碼</label>
+    <input id="passwordInput" type="password" autocomplete="current-password" placeholder="密碼">
+    <button id="loginBtn" class="btn btn-blue" type="button">登入雲端訂單</button>
+    <div id="loginStatus" class="status hidden"></div>
+    <p class="small-help">如果你是剛收到邀請、尚未設定密碼，請先開啟邀請信完成帳號設定，再回到這裡登入。</p>
+  </section>
 
-    <!-- 標題 -->
+  <section id="appSection" class="hidden">
+    <div class="account-bar">
+      <div>☁️ <strong>雲端已連線</strong> <span id="userEmail" class="small-help"></span><div id="syncStatus" class="small-help">準備同步…</div></div>
+      <button id="logoutBtn" class="btn btn-gray" type="button">登出</button>
+    </div>
     <div class="header">
-
-        <div>
-            <h1 class="title">📦 開團訂單管理</h1>
-
-            <div class="subtitle">
-                一人一列・多商品・各商品獨立到貨
-            </div>
-        </div>
-
-        <button id="addOrderBtn"
-                type="button"
-                class="btn btn-blue">
-            ＋ 新增訂單
-        </button>
-
+      <div><h1 class="title">📦 開團訂單管理</h1><div class="subtitle">一人一列・多商品・各商品獨立到貨・多人雲端共用</div></div>
+      <button id="addOrderBtn" type="button" class="btn btn-blue">＋ 新增訂單</button>
     </div>
-
-
-    <!-- 統計 -->
     <div class="stats">
-
-        <div class="stat">
-            <div class="stat-label">📦 訂單數</div>
-            <div id="totalOrders" class="stat-number">0</div>
-        </div>
-
-        <div class="stat">
-            <div class="stat-label">💰 總金額</div>
-            <div id="totalAmount" class="stat-number">$0</div>
-        </div>
-
-        <div class="stat">
-            <div class="stat-label">💵 未收款</div>
-            <div id="unpaidAmount" class="stat-number">$0</div>
-        </div>
-
-        <div class="stat">
-            <div class="stat-label">🧾 二補</div>
-            <div id="topupAmount" class="stat-number">$0</div>
-        </div>
-
+      <div class="stat"><div class="stat-label">📦 訂單數</div><div id="totalOrders" class="stat-number">0</div></div>
+      <div class="stat"><div class="stat-label">💰 總金額</div><div id="totalAmount" class="stat-number">$0</div></div>
+      <div class="stat"><div class="stat-label">💵 未收款</div><div id="unpaidAmount" class="stat-number">$0</div></div>
+      <div class="stat"><div class="stat-label">🧾 二補</div><div id="topupAmount" class="stat-number">$0</div></div>
     </div>
-
-
-    <!-- 篩選 -->
     <div class="filters">
-
-        <input
-            id="searchInput"
-            type="text"
-            placeholder="🔍 搜尋姓名、商品、備註、單號"
-        >
-
-        <select id="groupFilter">
-            <option value="">📦 全部開團</option>
-        </select>
-
-        <select id="paymentFilter">
-
-            <option value="">
-                💰 全部收款
-            </option>
-
-            <option value="paid">
-                ☑️ 已收款
-            </option>
-
-            <option value="unpaid">
-                ⬜ 未收款
-            </option>
-
-        </select>
-
-        <select id="arrivalFilter">
-
-            <option value="">
-                📬 全部到貨
-            </option>
-
-            <option value="arrived">
-                ☑️ 全部到貨
-            </option>
-
-            <option value="notArrived">
-                ⬜ 尚未全部到貨
-            </option>
-
-        </select>
-
-        <button
-            id="clearFilterBtn"
-            type="button"
-            class="btn">
-            清除篩選
-        </button>
-
+      <input id="searchInput" type="text" placeholder="🔍 搜尋姓名、商品、備註、單號">
+      <select id="groupFilter"><option value="">📦 全部開團</option></select>
+      <select id="paymentFilter"><option value="">💰 全部收款</option><option value="paid">☑️ 已收款</option><option value="unpaid">⬜ 未收款</option></select>
+      <select id="arrivalFilter"><option value="">📬 全部到貨</option><option value="arrived">☑️ 全部到貨</option><option value="notArrived">⬜ 尚未全部到貨</option></select>
+      <button id="clearFilterBtn" type="button" class="btn">清除篩選</button>
     </div>
-
-
-    <!-- 表格 -->
-    <div class="table-box">
-
-        <div class="table-scroll">
-
-            <table>
-
-                <thead>
-
-                    <tr>
-
-                        <th style="width:60px;text-align:center;">
-                            操作
-                        </th>
-
-                        <th>
-                            開團名稱
-                        </th>
-
-                        <th>
-                            買家姓名
-                        </th>
-
-                        <th>
-                            商品明細<br>
-                            <small style="font-weight:normal;color:#888;">
-                                已到貨可個別勾選
-                            </small>
-                        </th>
-
-                        <th>
-                            總金額
-                        </th>
-
-                        <th>
-                            付款狀態
-                        </th>
-
-                        <th>
-                            二補金額
-                        </th>
-
-                        <th>
-                            物流方式
-                        </th>
-
-                        <th>
-                            寄件單號
-                        </th>
-
-                        <th>
-                            備註說明
-                        </th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody id="orderTableBody"></tbody>
-
-            </table>
-
-        </div>
-
-    </div>
-
-
-    <!-- 底部按鈕 -->
+    <div class="table-box"><div class="table-scroll"><table>
+      <thead><tr><th style="width:60px;text-align:center">操作</th><th>開團名稱</th><th>買家姓名</th><th>商品明細<br><small style="font-weight:normal;color:#888">已到貨可個別勾選</small></th><th>總金額</th><th>付款狀態</th><th>二補金額</th><th>物流方式</th><th>寄件單號</th><th>備註說明</th></tr></thead>
+      <tbody id="orderTableBody"></tbody>
+    </table></div></div>
     <div class="bottom-buttons">
-
-        <button
-            id="exportCsvBtn"
-            type="button"
-            class="btn btn-gray">
-            📥 匯出資料備份
-        </button>
-
-        <button
-            id="importCsvBtn"
-            type="button"
-            class="btn btn-gray">
-            📤 匯入資料復原
-        </button>
-
-        <input
-            id="importFile"
-            class="file-input"
-            type="file"
-            accept=".json"
-        >
-
-        <button
-            id="resetAllBtn"
-            type="button"
-            class="btn btn-red"
-            style="margin-left:auto;">
-            ⚠️ 清空所有資料
-        </button>
-
+      <button id="exportCsvBtn" type="button" class="btn btn-gray">📥 匯出資料備份</button>
+      <button id="importCsvBtn" type="button" class="btn btn-gray">📤 匯入資料復原（取代雲端資料）</button>
+      <input id="importFile" class="file-input" type="file" accept=".json,application/json">
+      <button id="mergeJsonBtn" type="button" class="btn btn-green">➕ 合併 JSON 備份到雲端</button>
+      <input id="mergeFile" class="file-input" type="file" accept=".json,application/json">
+      <button id="mergeLocalBtn" type="button" class="btn btn-green">☁️ 合併本機舊資料到雲端</button>
+      <button id="resetAllBtn" type="button" class="btn btn-red" style="margin-left:auto">⚠️ 清空所有雲端資料</button>
     </div>
-
+    <p class="small-help">提醒：雲端訂單會與其他已登入使用者共用。合併匯入會保留雲端既有訂單；一般 JSON 復原會先再次確認並取代雲端資料。建議先匯出備份。</p>
+  </section>
 </div>
 
-
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-
-/* =========================================================
-   資料設定
-========================================================= */
-
+/* Supabase 設定：使用前端 Publishable key，不要放 service_role/secret key */
+const SUPABASE_URL = "https://tlfbomkrqzpqkrfibanz.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_l01ADVz-aulQmd62CvDrjg_RqlikFcw";
+const TABLE_NAME = "orders";
 const STORAGE_KEY = "G_DATA_V7";
+const LEGACY_ID_COLUMN = "legacy_id";
 
-
-/* 建立新的商品 */
-function createProduct() {
-
-    return {
-        name: "",
-        quantity: 1,
-        isArrived: false
-    };
-
-}
-
-
-/* 建立新的訂單 */
-function createOrder() {
-
-    return {
-        id: "o_" + Date.now() + "_" + Math.random().toString(36).substring(2, 8),
-
-        groupName: "",
-
-        buyerName: "",
-
-        products: [
-            createProduct()
-        ],
-
-        amount: 0,
-
-        isPaid: false,
-
-        topup: 0,
-
-        shipMethod: "7-11",
-
-        shipCode: "",
-
-        note: ""
-    };
-
-}
-
-
-/* =========================================================
-   讀取資料
-========================================================= */
-
+const $ = id => document.getElementById(id);
+const loginSection = $("loginSection"), appSection = $("appSection");
+const syncStatus = $("syncStatus");
+let supabaseClient = null;
 let orderList = [];
+let currentUser = null;
+let isBusy = false;
+let cloudReady = false;
+let remoteRefreshTimer = null;
 
-
-try {
-
-    const localData =
-        localStorage.getItem(STORAGE_KEY);
-
-    if (localData) {
-
-        const parsed =
-            JSON.parse(localData);
-
-        if (Array.isArray(parsed)) {
-
-            orderList = parsed;
-
-        }
-
-    }
-
-} catch (error) {
-
-    console.error(
-        "讀取資料失敗：",
-        error
-    );
-
+function createProduct(){return {name:"",quantity:1,isArrived:false};}
+function createOrder(){return {id:"o_"+Date.now()+"_"+Math.random().toString(36).substring(2,8),groupName:"",buyerName:"",products:[createProduct()],amount:0,isPaid:false,topup:0,shipMethod:"7-11",shipCode:"",note:""};}
+function normalizeOrder(order){
+  const safe = {...order};
+  safe.id = String(safe.id || ("o_"+Date.now()+"_"+Math.random().toString(36).substring(2,8)));
+  safe.groupName = String(safe.groupName || "");
+  safe.buyerName = String(safe.buyerName || "");
+  safe.products = Array.isArray(safe.products) ? safe.products.map(p=>({name:String(p?.name||""),quantity:Math.max(1,Number(p?.quantity)||1),isArrived:p?.isArrived===true})) : [createProduct()];
+  if(!safe.products.length) safe.products=[createProduct()];
+  safe.amount = Number(safe.amount)||0;
+  safe.isPaid = safe.isPaid===true || safe.isPaid==="true" || safe.isPaid===1;
+  safe.topup = Number(safe.topup)||0;
+  safe.shipMethod = String(safe.shipMethod||"7-11");
+  safe.shipCode = String(safe.shipCode||"");
+  safe.note = String(safe.note||"");
+  return safe;
 }
-
-
-/* 如果完全沒有資料，就建立一筆空白訂單 */
-if (orderList.length === 0) {
-
-    orderList.push(createOrder());
-
+function showLoginStatus(message,isError=false){const el=$("loginStatus");el.textContent=message;el.classList.remove("hidden");el.style.background=isError?"#fef2f2":"#eef2ff";el.style.color=isError?"#991b1b":"#3730a3";}
+function setSyncStatus(message,isError=false){syncStatus.textContent=message;syncStatus.className="small-help "+(isError?"warning":"");}
+function setBusy(value){isBusy=value;["addOrderBtn","exportCsvBtn","importCsvBtn","mergeJsonBtn","mergeLocalBtn","resetAllBtn"].forEach(id=>$(id).disabled=value);$("addOrderBtn").style.opacity=value?".6":"1";}
+function localBackup(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(orderList));}catch(e){console.warn("本機備份失敗",e);}}
+function formatError(error){return error?.message||String(error||"未知錯誤");}
+function rowToOrder(row){
+  let products=[];
+  try{products=JSON.parse(row["商品明細"]||"[]");}catch(e){products=[];}
+  return normalizeOrder({
+    id:row[LEGACY_ID_COLUMN]||("cloud_"+row.id),
+    groupName:row["開團名稱"]||"",
+    buyerName:row["買家姓名"]||"",
+    products,
+    amount:row["總金額"]??0,
+    isPaid:String(row["付款狀態"]||"false").toLowerCase()==="true",
+    topup:row["二補金額"]??0,
+    shipMethod:row["物流方式"]||"7-11",
+    shipCode:row["寄件單號"]||"",
+    note:row["備註"]||row["備註說明"]||""
+  });
 }
-
-
-/* =========================================================
-   DOM
-========================================================= */
-
-const dom = {
-
-    body:
-        document.getElementById(
-            "orderTableBody"
-        ),
-
-    search:
-        document.getElementById(
-            "searchInput"
-        ),
-
-    group:
-        document.getElementById(
-            "groupFilter"
-        ),
-
-    payment:
-        document.getElementById(
-            "paymentFilter"
-        ),
-
-    arrival:
-        document.getElementById(
-            "arrivalFilter"
-        )
-
-};
-
-
-/* =========================================================
-   儲存
-========================================================= */
-
-function saveData() {
-
-    try {
-
-        localStorage.setItem(
-            STORAGE_KEY,
-            JSON.stringify(orderList)
-        );
-
-    } catch (error) {
-
-        console.error(
-            "儲存資料失敗：",
-            error
-        );
-
-    }
-
-    updateStats();
-
-    updateGroupFilter();
-
+function orderToRow(order){
+  const o=normalizeOrder(order);
+  const now=new Date().toISOString();
+  return {
+    [LEGACY_ID_COLUMN]:o.id,
+    "開團名稱":o.groupName||"(未命名開團)",
+    "買家姓名":o.buyerName,
+    "商品明細":JSON.stringify(o.products),
+    "付款狀態":String(o.isPaid),
+    "二補金額":o.topup,
+    "物流方式":o.shipMethod,
+    "寄件單號":o.shipCode,
+    "備註說明":o.note,
+    "備註":o.note,
+    "總金額":o.amount,
+    "更新時間":now
+  };
 }
-
-
-/* =========================================================
-   統計
-========================================================= */
-
-function updateStats() {
-
-    let totalOrders =
-        orderList.length;
-
-    let totalAmount = 0;
-
-    let unpaidAmount = 0;
-
-    let topupAmount = 0;
-
-
-    orderList.forEach(order => {
-
-        const amount =
-            Number(order.amount) || 0;
-
-        const topup =
-            Number(order.topup) || 0;
-
-
-        totalAmount += amount;
-
-        topupAmount += topup;
-
-
-        if (!order.isPaid) {
-
-            unpaidAmount += amount;
-
-        }
-
+async function fetchCloudOrders(){
+  setSyncStatus("正在讀取雲端訂單…");
+  const {data,error}=await supabaseClient.from(TABLE_NAME).select("*").order("id",{ascending:true});
+  if(error) throw error;
+  orderList=(data||[]).map(rowToOrder);
+  cloudReady=true;
+  localBackup();
+  updateStats();updateGroupFilter();renderTable();
+  setSyncStatus("同步完成｜共 "+orderList.length+" 筆雲端訂單");
+}
+async function upsertOrder(order){
+  const row=orderToRow(order);
+  const {data,error}=await supabaseClient.from(TABLE_NAME).upsert(row,{onConflict:LEGACY_ID_COLUMN}).select().single();
+  if(error) throw error;
+  return rowToOrder(data);
+}
+async function saveOrder(order){
+  if(!currentUser||!cloudReady||isBusy)return;
+  setSyncStatus("正在儲存變更…");
+  try{
+    const saved=await upsertOrder(order);
+    const idx=orderList.findIndex(o=>o.id===order.id);
+    if(idx>=0)orderList[idx]=saved;
+    localBackup();updateStats();updateGroupFilter();
+    setSyncStatus("已同步儲存");
+  }catch(error){
+    console.error(error);
+    setSyncStatus("雲端儲存失敗："+formatError(error)+"。請確認資料表欄位與 RLS 權限。",true);
+    alert("雲端儲存失敗，這次變更仍暫存在目前瀏覽器。\n\n"+formatError(error));
+  }
+}
+async function deleteCloudOrder(id){
+  const {error}=await supabaseClient.from(TABLE_NAME).delete().eq(LEGACY_ID_COLUMN,id);
+  if(error)throw error;
+}
+function updateStats(){
+  let totalAmount=0,unpaidAmount=0,topupAmount=0;
+  orderList.forEach(o=>{const amount=Number(o.amount)||0;totalAmount+=amount;topupAmount+=Number(o.topup)||0;if(!o.isPaid)unpaidAmount+=amount;});
+  $("totalOrders").innerText=orderList.length;
+  $("totalAmount").innerText="$"+totalAmount.toLocaleString();
+  $("unpaidAmount").innerText="$"+unpaidAmount.toLocaleString();
+  $("topupAmount").innerText="$"+topupAmount.toLocaleString();
+}
+function updateGroupFilter(){
+  const current=$("groupFilter").value;const groups=new Set();
+  orderList.forEach(o=>{const g=String(o.groupName||"").trim();if(g)groups.add(g);});
+  $("groupFilter").innerHTML='<option value="">📦 全部開團</option>';
+  Array.from(groups).sort((a,b)=>a.localeCompare(b,"zh-Hant")).forEach(g=>{const op=document.createElement("option");op.value=g;op.textContent=g;if(g===current)op.selected=true;$("groupFilter").appendChild(op);});
+}
+function escapeHTML(value){return String(value??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");}
+function renderTable(){
+  const body=$("orderTableBody");body.innerHTML="";
+  const keyword=$("searchInput").value.toLowerCase().trim(),group=$("groupFilter").value,payment=$("paymentFilter").value,arrival=$("arrivalFilter").value;
+  const filtered=orderList.filter(o=>{
+    const search=[o.buyerName,o.groupName,o.note,o.shipCode,...(o.products||[]).map(p=>p.name)].join(" ").toLowerCase();
+    const products=o.products||[],allArrived=products.length>0&&products.every(p=>p.isArrived===true);
+    return (!keyword||search.includes(keyword))&&(!group||o.groupName===group)&&(!payment||(payment==="paid"?o.isPaid===true:o.isPaid!==true))&&(!arrival||(arrival==="arrived"?allArrived:!allArrived));
+  });
+  if(!filtered.length){body.innerHTML='<tr><td colspan="10" class="empty">📭 目前沒有符合條件的訂單資料。</td></tr>';return;}
+  filtered.forEach(order=>{
+    const tr=document.createElement("tr");
+    let productHTML='<div class="products">';
+    (order.products||[]).forEach((p,i)=>{
+      productHTML+=`<div class="product-item">
+        <input type="checkbox" class="product-check" ${p.isArrived?"checked":""} aria-label="商品到貨" data-action="toggle-arrived" data-id="${escapeHTML(order.id)}" data-index="${i}">
+        <input type="text" class="product-name ${p.isArrived?"arrived":""}" value="${escapeHTML(p.name)}" placeholder="商品名稱" data-action="product-field" data-field="name" data-id="${escapeHTML(order.id)}" data-index="${i}">
+        <input type="number" class="quantity" value="${Number(p.quantity)||1}" min="1" data-action="product-field" data-field="quantity" data-id="${escapeHTML(order.id)}" data-index="${i}">
+        <button type="button" class="delete-product" title="刪除此商品" data-action="remove-product" data-id="${escapeHTML(order.id)}" data-index="${i}">×</button>
+      </div>`;
     });
-
-
-    document.getElementById(
-        "totalOrders"
-    ).innerText =
-        totalOrders;
-
-
-    document.getElementById(
-        "totalAmount"
-    ).innerText =
-        "$" +
-        totalAmount.toLocaleString();
-
-
-    document.getElementById(
-        "unpaidAmount"
-    ).innerText =
-        "$" +
-        unpaidAmount.toLocaleString();
-
-
-    document.getElementById(
-        "topupAmount"
-    ).innerText =
-        "$" +
-        topupAmount.toLocaleString();
-
+    productHTML+='<button type="button" class="add-product" data-action="add-product" data-id="'+escapeHTML(order.id)+'">＋ 新增品項</button></div>';
+    tr.innerHTML=`
+      <td style="text-align:center"><button type="button" class="btn btn-red" style="padding:4px 8px;font-size:12px" data-action="delete-order" data-id="${escapeHTML(order.id)}">刪除</button></td>
+      <td><input type="text" class="group-input" value="${escapeHTML(order.groupName)}" placeholder="開團名稱" data-action="field" data-field="groupName" data-id="${escapeHTML(order.id)}"></td>
+      <td><input type="text" class="name-input" value="${escapeHTML(order.buyerName)}" placeholder="姓名" data-action="field" data-field="buyerName" data-id="${escapeHTML(order.id)}"></td>
+      <td>${productHTML}</td>
+      <td><input type="number" class="amount-input" value="${Number(order.amount)||0}" min="0" data-action="field" data-field="amount" data-id="${escapeHTML(order.id)}"></td>
+      <td><select class="method-select" data-action="field" data-field="isPaid" data-id="${escapeHTML(order.id)}">
+        <option value="false" ${!order.isPaid?"selected":""}>⬜ 未收款</option><option value="true" ${order.isPaid?"selected":""}>☑️ 已收款</option></select></td>
+      <td><input type="number" class="topup-input" value="${Number(order.topup)||0}" min="0" data-action="field" data-field="topup" data-id="${escapeHTML(order.id)}"></td>
+      <td><select class="method-select" data-action="field" data-field="shipMethod" data-id="${escapeHTML(order.id)}">
+        ${["7-11","全家","萊爾富","OK","郵寄","面交"].map(m=>`<option value="${m}" ${order.shipMethod===m?"selected":""}>${m}</option>`).join("")}</select></td>
+      <td><input type="text" class="ship-input" value="${escapeHTML(order.shipCode)}" placeholder="寄件單號" data-action="field" data-field="shipCode" data-id="${escapeHTML(order.id)}"></td>
+      <td><textarea class="note-input" placeholder="備註" data-action="field" data-field="note" data-id="${escapeHTML(order.id)}">${escapeHTML(order.note)}</textarea></td>`;
+    body.appendChild(tr);
+  });
 }
-
-
-/* =========================================================
-   開團篩選
-========================================================= */
-
-function updateGroupFilter() {
-
-    const current =
-        dom.group.value;
-
-
-    const groups =
-        new Set();
-
-
-    orderList.forEach(order => {
-
-        const group =
-            String(
-                order.groupName || ""
-            ).trim();
-
-
-        if (group) {
-
-            groups.add(group);
-
-        }
-
-    });
-
-
-    dom.group.innerHTML =
-        '<option value="">📦 全部開團</option>';
-
-
-    Array.from(groups)
-        .sort((a, b) =>
-            a.localeCompare(
-                b,
-                "zh-Hant"
-            )
-        )
-        .forEach(group => {
-
-            const option =
-                document.createElement(
-                    "option"
-                );
-
-            option.value =
-                group;
-
-            option.innerText =
-                group;
-
-
-            if (group === current) {
-
-                option.selected =
-                    true;
-
-            }
-
-
-            dom.group.appendChild(
-                option
-            );
-
-        });
-
+function getOrder(id){return orderList.find(o=>o.id===id);}
+async function updateField(id,field,value){
+  const o=getOrder(id);if(!o)return;
+  if(field==="amount"||field==="topup")o[field]=Number(value)||0;
+  else if(field==="isPaid")o[field]=value==="true";
+  else o[field]=value;
+  updateStats();updateGroupFilter();renderTable();await saveOrder(o);
 }
-
-
-/* =========================================================
-   HTML 安全處理
-========================================================= */
-
-function escapeHTML(value) {
-
-    return String(
-        value ?? ""
-    )
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-
+async function addOrder(){
+  if(isBusy)return;const o=createOrder();orderList.push(o);updateStats();updateGroupFilter();renderTable();
+  await saveOrder(o);
+  window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});
 }
-
-
-/* =========================================================
-   重新整理表格
-========================================================= */
-
-function renderTable() {
-
-    dom.body.innerHTML = "";
-
-
-    const keyword =
-        dom.search.value
-            .toLowerCase()
-            .trim();
-
-
-    const group =
-        dom.group.value;
-
-
-    const payment =
-        dom.payment.value;
-
-
-    const arrival =
-        dom.arrival.value;
-
-
-    const filtered =
-        orderList.filter(order => {
-
-
-            /* 搜尋 */
-
-            const searchableText = [
-
-                order.buyerName,
-
-                order.groupName,
-
-                order.note,
-
-                order.shipCode,
-
-                ...(order.products || [])
-                    .map(product =>
-                        product.name
-                    )
-
-            ]
-            .join(" ")
-            .toLowerCase();
-
-
-            const matchKeyword =
-                !keyword ||
-                searchableText.includes(
-                    keyword
-                );
-
-
-            /* 開團 */
-
-            const matchGroup =
-                !group ||
-                order.groupName === group;
-
-
-            /* 付款 */
-
-            let matchPayment = true;
-
-
-            if (payment === "paid") {
-
-                matchPayment =
-                    order.isPaid === true;
-
-            }
-
-
-            if (payment === "unpaid") {
-
-                matchPayment =
-                    order.isPaid !== true;
-
-            }
-
-
-            /* 到貨 */
-
-            const products =
-                order.products || [];
-
-
-            const allArrived =
-                products.length > 0 &&
-                products.every(
-                    product =>
-                        product.isArrived === true
-                );
-
-
-            let matchArrival = true;
-
-
-            if (arrival === "arrived") {
-
-                matchArrival =
-                    allArrived;
-
-            }
-
-
-            if (arrival === "notArrived") {
-
-                matchArrival =
-                    !allArrived;
-
-            }
-
-
-            return (
-
-                matchKeyword &&
-                matchGroup &&
-                matchPayment &&
-                matchArrival
-
-            );
-
-        });
-
-
-    if (filtered.length === 0) {
-
-        dom.body.innerHTML = `
-
-            <tr>
-
-                <td
-                    colspan="10"
-                    class="empty">
-
-                    📭 目前沒有符合條件的訂單資料。
-
-                </td>
-
-            </tr>
-
-        `;
-
-        return;
-
+async function deleteOrder(id){
+  const o=getOrder(id);if(!o)return;
+  if(!confirm(`確定要刪除 ${o.buyerName?`「${o.buyerName}」`:"這筆訂單"} 嗎？\n\n刪除後會同步刪除所有人的雲端資料。`))return;
+  try{setSyncStatus("正在刪除訂單…");await deleteCloudOrder(id);orderList=orderList.filter(x=>x.id!==id);localBackup();updateStats();updateGroupFilter();renderTable();setSyncStatus("已刪除並同步");}
+  catch(e){alert("刪除失敗："+formatError(e));setSyncStatus("刪除失敗："+formatError(e),true);}
+}
+async function addProduct(id){const o=getOrder(id);if(!o)return;o.products.push(createProduct());renderTable();await saveOrder(o);}
+async function updateProduct(id,index,field,value){
+  const o=getOrder(id);if(!o||!o.products[index])return;
+  o.products[index][field]=field==="quantity"?Math.max(1,Number(value)||1):value;
+  renderTable();await saveOrder(o);
+}
+async function toggleProductArrived(id,index){const o=getOrder(id);if(!o||!o.products[index])return;o.products[index].isArrived=!o.products[index].isArrived;renderTable();await saveOrder(o);}
+async function removeProduct(id,index){
+  const o=getOrder(id);if(!o)return;if(o.products.length<=1){alert("至少要保留一個商品品項。");return;}
+  o.products.splice(index,1);renderTable();await saveOrder(o);
+}
+function clearFilters(){$("searchInput").value="";$("groupFilter").value="";$("paymentFilter").value="";$("arrivalFilter").value="";renderTable();}
+function exportData(){
+  try{const blob=new Blob([JSON.stringify(orderList,null,2)],{type:"application/json;charset=utf-8"});const url=URL.createObjectURL(blob);const a=document.createElement("a");const d=new Date();const date=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");a.href=url;a.download=`開團訂單備份_${date}.json`;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);}
+  catch(e){alert("匯出失敗："+formatError(e));}
+}
+function readJsonFile(file){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>{try{const data=JSON.parse(r.result);if(!Array.isArray(data))throw new Error("JSON 最外層必須是訂單陣列");resolve(data.map(normalizeOrder));}catch(e){reject(e);}};r.onerror=()=>reject(new Error("檔案讀取失敗"));r.readAsText(file,"UTF-8");});}
+async function replaceCloudData(file){
+  if(!file)return;
+  let imported;try{imported=await readJsonFile(file);}catch(e){alert("匯入失敗：請確認是本系統匯出的 JSON 備份。\n"+formatError(e));return;}
+  if(!confirm(`即將用備份中的 ${imported.length} 筆訂單取代目前雲端資料（所有登入者都會受到影響）。\n\n強烈建議先匯出備份。確定繼續嗎？`))return;
+  if(!confirm("最後確認：這會刪除雲端原有訂單，再匯入備份。要繼續嗎？"))return;
+  setBusy(true);
+  try{
+    const {error:delError}=await supabaseClient.from(TABLE_NAME).delete().not(LEGACY_ID_COLUMN,"is",null);
+    if(delError)throw delError;
+    // 也刪除可能由舊資料直接建立、尚無 legacy_id 的列
+    const {error:delOldError}=await supabaseClient.from(TABLE_NAME).delete().not("id","is",null);
+    if(delOldError)throw delOldError;
+    for(let i=0;i<imported.length;i+=50){
+      const batch=imported.slice(i,i+50).map(orderToRow);
+      if(batch.length){const {error}=await supabaseClient.from(TABLE_NAME).upsert(batch,{onConflict:LEGACY_ID_COLUMN});if(error)throw error;}
     }
-
-
-    filtered.forEach(order => {
-
-        const tr =
-            document.createElement("tr");
-
-
-        /* =================================================
-           商品欄
-        ================================================= */
-
-        let productHTML =
-            `<div class="products">`;
-
-
-        const products =
-            order.products || [];
-
-
-        products.forEach(
-            (product, index) => {
-
-
-                productHTML += `
-
-                    <div class="product-item">
-
-                        <input
-                            type="checkbox"
-                            class="product-check"
-                            ${
-                                product.isArrived
-                                    ? "checked"
-                                    : ""
-                            }
-                            onchange="
-                                toggleProductArrived(
-                                    '${order.id}',
-                                    ${index}
-                                )
-                            "
-                        >
-
-                        <input
-                            type="text"
-                            class="product-name ${
-                                product.isArrived
-                                    ? "arrived"
-                                    : ""
-                            }"
-                            value="${escapeHTML(
-                                product.name
-                            )}"
-                            placeholder="商品名稱"
-                            onchange="
-                                updateProduct(
-                                    '${order.id}',
-                                    ${index},
-                                    'name',
-                                    this.value
-                                )
-                            "
-                        >
-
-                        <input
-                            type="number"
-                            class="quantity"
-                            value="${
-                                Number(
-                                    product.quantity
-                                ) || 1
-                            }"
-                            min="1"
-                            onchange="
-                                updateProduct(
-                                    '${order.id}',
-                                    ${index},
-                                    'quantity',
-                                    this.value
-                                )
-                            "
-                        >
-
-                        <button
-                            type="button"
-                            class="delete-product"
-                            title="刪除此商品"
-                            onclick="
-                                removeProduct(
-                                    '${order.id}',
-                                    ${index}
-                                )
-                            "
-                        >
-                            ×
-                        </button>
-
-                    </div>
-
-                `;
-
-            }
-        );
-
-
-        productHTML += `
-
-            <button
-                type="button"
-                class="add-product"
-                onclick="
-                    addProduct(
-                        '${order.id}'
-                    )
-                "
-            >
-                ＋ 新增品項
-            </button>
-
-        </div>`;
-
-
-        /* =================================================
-           整列
-        ================================================= */
-
-        tr.innerHTML = `
-
-            <!-- 操作 -->
-
-            <td style="text-align:center;">
-
-                <button
-                    type="button"
-                    class="btn btn-red"
-                    style="
-                        padding:4px 8px;
-                        font-size:12px;
-                    "
-                    onclick="
-                        deleteOrder(
-                            '${order.id}'
-                        )
-                    "
-                >
-                    刪除
-                </button>
-
-            </td>
-
-
-            <!-- 開團 -->
-
-            <td>
-
-                <input
-                    type="text"
-                    class="group-input"
-                    value="${escapeHTML(
-                        order.groupName
-                    )}"
-                    placeholder="開團名稱"
-                    onchange="
-                        updateField(
-                            '${order.id}',
-                            'groupName',
-                            this.value
-                        )
-                    "
-                >
-
-            </td>
-
-
-            <!-- 姓名 -->
-
-            <td>
-
-                <input
-                    type="text"
-                    class="name-input"
-                    value="${escapeHTML(
-                        order.buyerName
-                    )}"
-                    placeholder="姓名"
-                    onchange="
-                        updateField(
-                            '${order.id}',
-                            'buyerName',
-                            this.value
-                        )
-                    "
-                >
-
-            </td>
-
-
-            <!-- 商品 -->
-
-            <td>
-                ${productHTML}
-            </td>
-
-
-            <!-- 金額 -->
-
-            <td>
-
-                <input
-                    type="number"
-                    class="amount-input"
-                    value="${
-                        Number(
-                            order.amount
-                        ) || 0
-                    }"
-                    min="0"
-                    onchange="
-                        updateField(
-                            '${order.id}',
-                            'amount',
-                            this.value
-                        )
-                    "
-                >
-
-            </td>
-
-
-            <!-- 付款 -->
-
-            <td>
-
-                <select
-                    class="method-select"
-                    onchange="
-                        updateField(
-                            '${order.id}',
-                            'isPaid',
-                            this.value === 'true'
-                        )
-                    "
-                >
-
-                    <option
-                        value="false"
-                        ${
-                            !order.isPaid
-                                ? "selected"
-                                : ""
-                        }
-                    >
-                        ⬜ 未收款
-                    </option>
-
-                    <option
-                        value="true"
-                        ${
-                            order.isPaid
-                                ? "selected"
-                                : ""
-                        }
-                    >
-                        ☑️ 已收款
-                    </option>
-
-                </select>
-
-            </td>
-
-
-            <!-- 二補 -->
-
-            <td>
-
-                <input
-                    type="number"
-                    class="topup-input"
-                    value="${
-                        Number(
-                            order.topup
-                        ) || 0
-                    }"
-                    min="0"
-                    onchange="
-                        updateField(
-                            '${order.id}',
-                            'topup',
-                            this.value
-                        )
-                    "
-                >
-
-            </td>
-
-
-            <!-- 物流 -->
-
-            <td>
-
-                <select
-                    class="method-select"
-                    onchange="
-                        updateField(
-                            '${order.id}',
-                            'shipMethod',
-                            this.value
-                        )
-                    "
-                >
-
-                    <option
-                        value="7-11"
-                        ${
-                            order.shipMethod === "7-11"
-                                ? "selected"
-                                : ""
-                        }
-                    >
-                        7-11
-                    </option>
-
-                    <option
-                        value="全家"
-                        ${
-                            order.shipMethod === "全家"
-                                ? "selected"
-                                : ""
-                        }
-                    >
-                        全家
-                    </option>
-
-                    <option
-                        value="萊爾富"
-                        ${
-                            order.shipMethod === "萊爾富"
-                                ? "selected"
-                                : ""
-                        }
-                    >
-                        萊爾富
-                    </option>
-
-                    <option
-                        value="OK"
-                        ${
-                            order.shipMethod === "OK"
-                                ? "selected"
-                                : ""
-                        }
-                    >
-                        OK
-                    </option>
-
-                    <option
-                        value="郵寄"
-                        ${
-                            order.shipMethod === "郵寄"
-                                ? "selected"
-                                : ""
-                        }
-                    >
-                        郵寄
-                    </option>
-
-                    <option
-                        value="面交"
-                        ${
-                            order.shipMethod === "面交"
-                                ? "selected"
-                                : ""
-                        }
-                    >
-                        面交
-                    </option>
-
-                </select>
-
-            </td>
-
-
-            <!-- 單號 -->
-
-            <td>
-
-                <input
-                    type="text"
-                    class="ship-input"
-                    value="${escapeHTML(
-                        order.shipCode
-                    )}"
-                    placeholder="寄件單號"
-                    onchange="
-                        updateField(
-                            '${order.id}',
-                            'shipCode',
-                            this.value
-                        )
-                    "
-                >
-
-            </td>
-
-
-            <!-- 備註 -->
-
-            <td>
-
-                <textarea
-                    class="note-input"
-                    placeholder="備註"
-                    onchange="
-                        updateField(
-                            '${order.id}',
-                            'note',
-                            this.value
-                        )
-                    "
-                >${escapeHTML(
-                    order.note
-                )}</textarea>
-
-            </td>
-
-        `;
-
-
-        dom.body.appendChild(tr);
-
-    });
-
+    await fetchCloudOrders();alert("✅ 已將備份復原至雲端。");
+  }catch(e){alert("雲端復原失敗："+formatError(e)+"\n請檢查欄位型態、唯一索引及 RLS 權限。");setSyncStatus("復原失敗："+formatError(e),true);}
+  finally{setBusy(false);}
 }
-
-
-/* =========================================================
-   更新一般欄位
-========================================================= */
-
-function updateField(
-    id,
-    field,
-    value
-) {
-
-    const order =
-        orderList.find(
-            item => item.id === id
-        );
-
-
-    if (!order) return;
-
-
-    if (
-        field === "amount" ||
-        field === "topup"
-    ) {
-
-        order[field] =
-            Number(value) || 0;
-
-    } else {
-
-        order[field] =
-            value;
-
+async function mergeJsonToCloud(file){
+  if(!file)return;
+  let imported;try{imported=await readJsonFile(file);}catch(e){alert("匯入失敗：請確認是本系統匯出的 JSON 備份。\n"+formatError(e));return;}
+  if(!confirm(`將 ${imported.length} 筆訂單合併至雲端。相同訂單 ID 會更新，其他訂單會新增；雲端其他訂單會保留。繼續嗎？`))return;
+  setBusy(true);
+  try{
+    for(let i=0;i<imported.length;i+=50){
+      const batch=imported.slice(i,i+50).map(orderToRow);
+      if(batch.length){const {error}=await supabaseClient.from(TABLE_NAME).upsert(batch,{onConflict:LEGACY_ID_COLUMN});if(error)throw error;}
     }
-
-
-    saveData();
-
-    renderTable();
-
+    await fetchCloudOrders();alert("✅ 合併匯入成功！雲端原有的其他訂單已保留。");
+  }catch(e){alert("合併匯入失敗："+formatError(e)+"\n請確認資料表欄位型態、唯一索引與 RLS 權限。");setSyncStatus("合併失敗："+formatError(e),true);}
+  finally{setBusy(false);}
 }
-
-
-/* =========================================================
-   新增訂單
-========================================================= */
-
-function addOrder() {
-
-    const newOrder =
-        createOrder();
-
-
-    orderList.push(
-        newOrder
-    );
-
-
-    saveData();
-
-    renderTable();
-
-
-    /* 自動捲到最下面 */
-
-    setTimeout(() => {
-
-        window.scrollTo({
-
-            top:
-                document.body.scrollHeight,
-
-            behavior:
-                "smooth"
-
-        });
-
-    }, 50);
-
-}
-
-
-/* =========================================================
-   刪除訂單
-========================================================= */
-
-function deleteOrder(id) {
-
-    const order =
-        orderList.find(
-            item => item.id === id
-        );
-
-
-    if (!order) return;
-
-
-    const buyer =
-        order.buyerName
-            ? `「${order.buyerName}」`
-            : "這筆訂單";
-
-
-    if (
-        !confirm(
-            `確定要刪除 ${buyer} 嗎？\n\n刪除後無法從此頁面復原。`
-        )
-    ) {
-
-        return;
-
+async function mergeLocalStorageToCloud(){
+  let raw;try{raw=localStorage.getItem(STORAGE_KEY);}catch(e){}
+  if(!raw){alert("這個瀏覽器沒有找到 G_DATA_V7 本機資料。若有 JSON 備份，請使用「匯入資料復原」旁的合併方式。");return;}
+  let data;try{data=JSON.parse(raw);if(!Array.isArray(data))throw new Error("本機資料格式不正確");data=data.map(normalizeOrder);}catch(e){alert("本機資料讀取失敗："+formatError(e));return;}
+  if(!confirm(`找到 ${data.length} 筆本機訂單。將它們合併到雲端；相同訂單 ID 會更新，其他訂單新增。雲端其他訂單會保留。繼續嗎？`))return;
+  setBusy(true);
+  try{
+    for(let i=0;i<data.length;i+=50){
+      const batch=data.slice(i,i+50).map(orderToRow);
+      if(batch.length){const {error}=await supabaseClient.from(TABLE_NAME).upsert(batch,{onConflict:LEGACY_ID_COLUMN});if(error)throw error;}
     }
-
-
-    orderList =
-        orderList.filter(
-            item => item.id !== id
-        );
-
-
-    saveData();
-
-    renderTable();
-
+    await fetchCloudOrders();alert("✅ 本機舊資料已合併到雲端。");
+  }catch(e){alert("合併本機資料失敗："+formatError(e));setSyncStatus("合併失敗："+formatError(e),true);}
+  finally{setBusy(false);}
 }
-
-
-/* =========================================================
-   新增商品
-========================================================= */
-
-function addProduct(orderId) {
-
-    const order =
-        orderList.find(
-            item => item.id === orderId
-        );
-
-
-    if (!order) return;
-
-
-    if (!Array.isArray(order.products)) {
-
-        order.products = [];
-
-    }
-
-
-    order.products.push(
-        createProduct()
-    );
-
-
-    saveData();
-
-    renderTable();
-
+async function resetAll(){
+  if(!confirm("⚠️ 確定清空所有雲端訂單？所有登入者都會看不到這些訂單。"))return;
+  if(!confirm("再確認一次：真的要刪除全部雲端訂單嗎？建議先匯出備份。"))return;
+  setBusy(true);
+  try{
+    const {error}=await supabaseClient.from(TABLE_NAME).delete().not("id","is",null);
+    if(error)throw error;
+    orderList=[];localBackup();updateStats();updateGroupFilter();renderTable();setSyncStatus("雲端訂單已清空");
+  }catch(e){alert("清空失敗："+formatError(e));setSyncStatus("清空失敗："+formatError(e),true);}
+  finally{setBusy(false);}
 }
-
-
-/* =========================================================
-   更新商品
-========================================================= */
-
-function updateProduct(
-    orderId,
-    index,
-    field,
-    value
-) {
-
-    const order =
-        orderList.find(
-            item => item.id === orderId
-        );
-
-
-    if (!order) return;
-
-
-    if (!order.products[index]) {
-
-        return;
-
-    }
-
-
-    if (field === "quantity") {
-
-        order.products[index][field] =
-            Math.max(
-                1,
-                Number(value) || 1
-            );
-
-    } else {
-
-        order.products[index][field] =
-            value;
-
-    }
-
-
-    saveData();
-
-    renderTable();
-
+async function login(){
+  const email=$("emailInput").value.trim(),password=$("passwordInput").value;
+  if(!email||!password){showLoginStatus("請輸入 Email 和密碼。",true);return;}
+  $("loginBtn").disabled=true;showLoginStatus("正在登入…");
+  try{
+    const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});
+    if(error)throw error;
+    if(data.user)await enterApp(data.user);
+  }catch(e){showLoginStatus("登入失敗："+formatError(e)+"\n請確認帳號已完成邀請設定、密碼正確，並檢查 Supabase Auth 設定。",true);}
+  finally{$("loginBtn").disabled=false;}
 }
-
-
-/* =========================================================
-   到貨勾選
-========================================================= */
-
-function toggleProductArrived(
-    orderId,
-    index
-) {
-
-    const order =
-        orderList.find(
-            item => item.id === orderId
-        );
-
-
-    if (!order) return;
-
-
-    if (!order.products[index]) {
-
-        return;
-
-    }
-
-
-    order.products[index].isArrived =
-        !order.products[index].isArrived;
-
-
-    saveData();
-
-    renderTable();
-
+async function enterApp(user){
+  currentUser=user;loginSection.classList.add("hidden");appSection.classList.remove("hidden");
+  $("userEmail").textContent="｜"+(user.email||"已登入");
+  try{await fetchCloudOrders();}
+  catch(e){cloudReady=false;setSyncStatus("讀取雲端失敗："+formatError(e),true);alert("登入成功，但讀取訂單失敗。\n\n"+formatError(e)+"\n\n請檢查資料表欄位名稱與 RLS 權限。");}
 }
-
-
-/* =========================================================
-   刪除商品
-========================================================= */
-
-function removeProduct(
-    orderId,
-    index
-) {
-
-    const order =
-        orderList.find(
-            item => item.id === orderId
-        );
-
-
-    if (!order) return;
-
-
-    if (
-        order.products.length <= 1
-    ) {
-
-        alert(
-            "至少要保留一個商品品項。"
-        );
-
-        return;
-
-    }
-
-
-    order.products.splice(
-        index,
-        1
-    );
-
-
-    saveData();
-
-    renderTable();
-
+async function logout(){
+  try{await supabaseClient.auth.signOut();}catch(e){alert("登出時發生問題："+formatError(e));}
+  currentUser=null;cloudReady=false;orderList=[];appSection.classList.add("hidden");loginSection.classList.remove("hidden");$("passwordInput").value="";$("loginStatus").classList.add("hidden");
 }
-
-
-/* =========================================================
-   清除篩選
-========================================================= */
-
-function clearFilters() {
-
-    dom.search.value = "";
-
-    dom.group.value = "";
-
-    dom.payment.value = "";
-
-    dom.arrival.value = "";
-
-
-    renderTable();
-
+function wireEvents(){
+  $("loginBtn").addEventListener("click",login);
+  $("passwordInput").addEventListener("keydown",e=>{if(e.key==="Enter")login();});
+  $("logoutBtn").addEventListener("click",logout);
+  $("addOrderBtn").addEventListener("click",addOrder);
+  ["searchInput","groupFilter","paymentFilter","arrivalFilter"].forEach(id=>$(id).addEventListener(id==="searchInput"?"input":"change",renderTable));
+  $("clearFilterBtn").addEventListener("click",clearFilters);
+  $("exportCsvBtn").addEventListener("click",exportData);
+  $("importCsvBtn").addEventListener("click",()=>$("importFile").click());
+  $("importFile").addEventListener("change",async function(){const f=this.files[0];this.value="";await replaceCloudData(f);});
+  $("mergeJsonBtn").addEventListener("click",()=>$("mergeFile").click());
+  $("mergeLocalBtn").addEventListener("click",mergeLocalStorageToCloud);
+  $("mergeFile").addEventListener("change",async function(){const f=this.files[0];this.value="";await mergeJsonToCloud(f);});
+  // 將同一張表內的操作用事件委派處理，避免每次重繪都重綁
+  $("orderTableBody").addEventListener("change",async e=>{
+    const el=e.target,action=el.dataset.action,id=el.dataset.id,index=Number(el.dataset.index);
+    if(action==="field")await updateField(id,el.dataset.field,el.value);
+    else if(action==="product-field")await updateProduct(id,index,el.dataset.field,el.value);
+    else if(action==="toggle-arrived")await toggleProductArrived(id,index);
+  });
+  $("orderTableBody").addEventListener("click",async e=>{
+    const el=e.target.closest("[data-action]");if(!el)return;
+    const {action,id}=el.dataset,index=Number(el.dataset.index);
+    if(action==="delete-order")await deleteOrder(id);
+    else if(action==="add-product")await addProduct(id);
+    else if(action==="remove-product")await removeProduct(id,index);
+  });
+  $("resetAllBtn").addEventListener("click",resetAll);
 }
-
-
-/* =========================================================
-   匯出 JSON 備份
-========================================================= */
-
-function exportData() {
-
-    try {
-
-        const data =
-            JSON.stringify(
-                orderList,
-                null,
-                2
-            );
-
-
-        const blob =
-            new Blob(
-                [data],
-                {
-                    type:
-                        "application/json;charset=utf-8"
-                }
-            );
-
-
-        const url =
-            URL.createObjectURL(
-                blob
-            );
-
-
-        const a =
-            document.createElement(
-                "a"
-            );
-
-
-        const now =
-            new Date();
-
-
-        const date =
-            now.getFullYear() +
-            "-" +
-            String(
-                now.getMonth() + 1
-            ).padStart(2, "0") +
-            "-" +
-            String(
-                now.getDate()
-            ).padStart(2, "0");
-
-
-        a.href = url;
-
-        a.download =
-            `開團訂單備份_${date}.json`;
-
-
-        document.body.appendChild(a);
-
-        a.click();
-
-        a.remove();
-
-
-        URL.revokeObjectURL(
-            url
-        );
-
-
-    } catch (error) {
-
-        alert(
-            "匯出失敗，請稍後再試。"
-        );
-
-        console.error(error);
-
-    }
-
+async function init(){
+  if(!window.supabase||!window.supabase.createClient){
+    showLoginStatus("Supabase 程式載入失敗，請確認網路連線後重新整理。",true);return;
+  }
+  supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{
+    auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}
+  });
+  wireEvents();
+  const {data,error}=await supabaseClient.auth.getSession();
+  if(error){showLoginStatus("無法確認登入狀態："+formatError(error),true);return;}
+  if(data.session?.user){await enterApp(data.session.user);}
 }
-
-
-/* =========================================================
-   匯入 JSON
-========================================================= */
-
-function importData(file) {
-
-    if (!file) return;
-
-
-    const reader =
-        new FileReader();
-
-
-    reader.onload =
-        function(event) {
-
-            try {
-
-                const imported =
-                    JSON.parse(
-                        event.target.result
-                    );
-
-
-                if (
-                    !Array.isArray(
-                        imported
-                    )
-                ) {
-
-                    throw new Error(
-                        "格式錯誤"
-                    );
-
-                }
-
-
-                if (
-                    !confirm(
-                        `確定要匯入這份資料嗎？\n\n目前資料會被匯入內容取代。`
-                    )
-                ) {
-
-                    return;
-
-                }
-
-
-                orderList =
-                    imported;
-
-
-                /* 補齊舊資料可能缺少的欄位 */
-
-                orderList.forEach(
-                    order => {
-
-                        if (
-                            !order.id
-                        ) {
-
-                            order.id =
-                                "o_" +
-                                Date.now() +
-                                "_" +
-                                Math.random()
-                                    .toString(36)
-                                    .substring(
-                                        2,
-                                        8
-                                    );
-
-                        }
-
-
-                        if (
-                            !Array.isArray(
-                                order.products
-                            )
-                        ) {
-
-                            order.products =
-                                [
-                                    createProduct()
-                                ];
-
-                        }
-
-
-                        if (
-                            order.amount ===
-                            undefined
-                        ) {
-
-                            order.amount = 0;
-
-                        }
-
-
-                        if (
-                            order.topup ===
-                            undefined
-                        ) {
-
-                            order.topup = 0;
-
-                        }
-
-
-                        if (
-                            order.isPaid ===
-                            undefined
-                        ) {
-
-                            order.isPaid =
-                                false;
-
-                        }
-
-
-                        if (
-                            !order.shipMethod
-                        ) {
-
-                            order.shipMethod =
-                                "7-11";
-
-                        }
-
-
-                        order.products.forEach(
-                            product => {
-
-                                if (
-                                    product.quantity ===
-                                    undefined
-                                ) {
-
-                                    product.quantity =
-                                        1;
-
-                                }
-
-
-                                if (
-                                    product.isArrived ===
-                                    undefined
-                                ) {
-
-                                    product.isArrived =
-                                        false;
-
-                                }
-
-                            }
-                        );
-
-                    }
-                );
-
-
-                saveData();
-
-                renderTable();
-
-
-                alert(
-                    "✅ 資料匯入成功！"
-                );
-
-
-            } catch (error) {
-
-                alert(
-                    "❌ 匯入失敗！\n\n請確認選擇的是本系統匯出的 JSON 備份檔。"
-                );
-
-
-                console.error(
-                    error
-                );
-
-            }
-
-        };
-
-
-    reader.readAsText(
-        file,
-        "UTF-8"
-    );
-
-}
-
-
-/* =========================================================
-   清空所有資料
-========================================================= */
-
-function resetAll() {
-
-    if (
-        !confirm(
-            "⚠️ 確定要清空所有訂單資料嗎？\n\n這個動作無法復原！"
-        )
-    ) {
-
-        return;
-
-    }
-
-
-    if (
-        !confirm(
-            "再確認一次：真的要全部刪除嗎？"
-        )
-    ) {
-
-        return;
-
-    }
-
-
-    orderList = [];
-
-
-    localStorage.removeItem(
-        STORAGE_KEY
-    );
-
-
-    orderList.push(
-        createOrder()
-    );
-
-
-    saveData();
-
-    renderTable();
-
-}
-
-
-/* =========================================================
-   事件監聽
-========================================================= */
-
-
-/* 新增訂單 */
-
-document
-    .getElementById(
-        "addOrderBtn"
-    )
-    .addEventListener(
-        "click",
-        addOrder
-    );
-
-
-/* 搜尋 */
-
-dom.search.addEventListener(
-    "input",
-    renderTable
-);
-
-
-/* 開團 */
-
-dom.group.addEventListener(
-    "change",
-    renderTable
-);
-
-
-/* 付款 */
-
-dom.payment.addEventListener(
-    "change",
-    renderTable
-);
-
-
-/* 到貨 */
-
-dom.arrival.addEventListener(
-    "change",
-    renderTable
-);
-
-
-/* 清除篩選 */
-
-document
-    .getElementById(
-        "clearFilterBtn"
-    )
-    .addEventListener(
-        "click",
-        clearFilters
-);
-
-
-/* 匯出 */
-
-document
-    .getElementById(
-        "exportCsvBtn"
-    )
-    .addEventListener(
-        "click",
-        exportData
-);
-
-
-/* 匯入按鈕 */
-
-document
-    .getElementById(
-        "importCsvBtn"
-    )
-    .addEventListener(
-        "click",
-        function() {
-
-            document
-                .getElementById(
-                    "importFile"
-                )
-                .click();
-
-        }
-    );
-
-
-/* 選擇檔案後匯入 */
-
-document
-    .getElementById(
-        "importFile"
-    )
-    .addEventListener(
-        "change",
-        function() {
-
-            const file =
-                this.files[0];
-
-
-            if (file) {
-
-                importData(
-                    file
-                );
-
-            }
-
-
-            this.value = "";
-
-        }
-    );
-
-
-/* 清空 */
-
-document
-    .getElementById(
-        "resetAllBtn"
-    )
-    .addEventListener(
-        "click",
-        resetAll
-    );
-
-
-/* =========================================================
-   第一次載入
-========================================================= */
-
-updateStats();
-
-updateGroupFilter();
-
-renderTable();
-
+init();
 </script>
-
 </body>
 </html>

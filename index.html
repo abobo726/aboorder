@@ -24,9 +24,9 @@ input:focus,select:focus,textarea:focus{border-color:#2563eb;outline:none}
 .stat{padding:18px}.stat-label{color:#777;font-size:14px}.stat-number{font-size:25px;font-weight:bold;margin-top:5px}
 .filters{padding:15px;margin-bottom:20px;display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:10px}
 .table-box{overflow:hidden}.table-scroll{overflow-x:auto}
-table{border-collapse:collapse;width:100%;min-width:1450px}th{background:#f9fafb;font-weight:bold;font-size:14px;padding:12px;text-align:left;border-bottom:1px solid #ddd;white-space:nowrap}
+table{border-collapse:collapse;width:100%;min-width:1320px}th{background:#f9fafb;font-weight:bold;font-size:14px;padding:12px;text-align:left;border-bottom:1px solid #ddd;white-space:nowrap}
 td{padding:10px;border-bottom:1px solid #eee;vertical-align:top}tr:hover td{background:#fafafa}
-.group-input{width:140px}.name-input{width:100px}.amount-input,.topup-input{width:85px;text-align:right}.method-select{width:95px}.ship-input{width:125px}.note-input{width:170px;min-height:50px;resize:vertical}
+.group-input{width:140px}.name-input{width:100px}.amount-input,.topup-input{width:85px;text-align:right}.method-select{width:95px}.row-select{width:18px;height:18px;cursor:pointer}.note-input{width:170px;min-height:50px;resize:vertical}
 .products{min-width:380px}.product-item{display:flex;align-items:center;gap:5px;margin-bottom:5px}.product-check{width:18px;height:18px;flex-shrink:0;cursor:pointer}.product-name{width:200px}.quantity{width:55px}.product-name.arrived{text-decoration:line-through;opacity:.5}
 .delete-product{border:0;background:none;color:#ef4444;font-size:18px;padding:0 4px}.add-product{border:0;background:none;color:#2563eb;padding:4px 0;font-size:13px}
 .empty{text-align:center;padding:50px;color:#999}.bottom-buttons{margin-top:18px;display:flex;gap:8px;flex-wrap:wrap}.file-input{display:none}
@@ -64,17 +64,19 @@ td{padding:10px;border-bottom:1px solid #eee;vertical-align:top}tr:hover td{back
       <div class="stat"><div class="stat-label">🧾 二補</div><div id="topupAmount" class="stat-number">$0</div></div>
     </div>
     <div class="filters">
-      <input id="searchInput" type="text" placeholder="🔍 搜尋姓名、商品、備註、單號">
+      <input id="searchInput" type="text" placeholder="🔍 搜尋姓名、商品、備註">
       <select id="groupFilter"><option value="">📦 全部開團</option></select>
       <select id="paymentFilter"><option value="">💰 全部收款</option><option value="paid">☑️ 已收款</option><option value="unpaid">⬜ 未收款</option></select>
       <select id="arrivalFilter"><option value="">📬 全部到貨</option><option value="arrived">☑️ 全部到貨</option><option value="notArrived">⬜ 尚未全部到貨</option></select>
       <button id="clearFilterBtn" type="button" class="btn">清除篩選</button>
     </div>
     <div class="table-box"><div class="table-scroll"><table>
-      <thead><tr><th style="width:60px;text-align:center">操作</th><th>開團名稱</th><th>買家姓名</th><th>商品明細<br><small style="font-weight:normal;color:#888">已到貨可個別勾選</small></th><th>總金額</th><th>付款狀態</th><th>二補金額</th><th>物流方式</th><th>寄件單號</th><th>備註說明</th></tr></thead>
+      <thead><tr><th style="width:48px;text-align:center"><input id="selectVisibleOrders" type="checkbox" title="全選目前篩選結果"></th><th style="width:60px;text-align:center">操作</th><th>開團名稱</th><th>買家姓名</th><th>商品明細<br><small style="font-weight:normal;color:#888">已到貨可個別勾選</small></th><th>總金額</th><th>付款狀態</th><th>二補金額</th><th>物流方式</th><th>備註說明</th></tr></thead>
       <tbody id="orderTableBody"></tbody>
     </table></div></div>
     <div class="bottom-buttons">
+      <button id="exportSelectedTxtBtn" type="button" class="btn btn-blue">📝 匯出選取訂單 TXT</button>
+      <button id="printSelectedBtn" type="button" class="btn btn-green">🖨️ 列印選取出貨明細</button>
       <button id="exportCsvBtn" type="button" class="btn btn-gray">📥 匯出資料備份</button>
       <button id="importCsvBtn" type="button" class="btn btn-gray">📤 匯入資料復原（取代雲端資料）</button>
       <input id="importFile" class="file-input" type="file" accept=".json,application/json">
@@ -101,6 +103,7 @@ const loginSection = $("loginSection"), appSection = $("appSection");
 const syncStatus = $("syncStatus");
 let supabaseClient = null;
 let orderList = [];
+let selectedOrderIds = new Set();
 let currentUser = null;
 let isBusy = false;
 let cloudReady = false;
@@ -216,11 +219,11 @@ function renderTable(){
   const body=$("orderTableBody");body.innerHTML="";
   const keyword=$("searchInput").value.toLowerCase().trim(),group=$("groupFilter").value,payment=$("paymentFilter").value,arrival=$("arrivalFilter").value;
   const filtered=orderList.filter(o=>{
-    const search=[o.buyerName,o.groupName,o.note,o.shipCode,...(o.products||[]).map(p=>p.name)].join(" ").toLowerCase();
+    const search=[o.buyerName,o.groupName,o.note,...(o.products||[]).map(p=>p.name)].join(" ").toLowerCase();
     const products=o.products||[],allArrived=products.length>0&&products.every(p=>p.isArrived===true);
     return (!keyword||search.includes(keyword))&&(!group||o.groupName===group)&&(!payment||(payment==="paid"?o.isPaid===true:o.isPaid!==true))&&(!arrival||(arrival==="arrived"?allArrived:!allArrived));
   });
-  if(!filtered.length){body.innerHTML='<tr><td colspan="10" class="empty">📭 目前沒有符合條件的訂單資料。</td></tr>';return;}
+  if(!filtered.length){body.innerHTML='<tr><td colspan="10" class="empty">📭 目前沒有符合條件的訂單資料。</td></tr>';updateSelectVisibleCheckbox();return;}
   filtered.forEach(order=>{
     const tr=document.createElement("tr");
     let productHTML='<div class="products">';
@@ -234,6 +237,7 @@ function renderTable(){
     });
     productHTML+='<button type="button" class="add-product" data-action="add-product" data-id="'+escapeHTML(order.id)+'">＋ 新增品項</button></div>';
     tr.innerHTML=`
+      <td style="text-align:center"><input type="checkbox" class="row-select" data-action="select-order" data-id="${escapeHTML(order.id)}" ${selectedOrderIds.has(order.id)?"checked":""} aria-label="選取此訂單"></td>
       <td style="text-align:center"><button type="button" class="btn btn-red" style="padding:4px 8px;font-size:12px" data-action="delete-order" data-id="${escapeHTML(order.id)}">刪除</button></td>
       <td><input type="text" class="group-input" value="${escapeHTML(order.groupName)}" placeholder="開團名稱" data-action="field" data-field="groupName" data-id="${escapeHTML(order.id)}"></td>
       <td><input type="text" class="name-input" value="${escapeHTML(order.buyerName)}" placeholder="姓名" data-action="field" data-field="buyerName" data-id="${escapeHTML(order.id)}"></td>
@@ -244,11 +248,49 @@ function renderTable(){
       <td><input type="number" class="topup-input" value="${Number(order.topup)||0}" min="0" data-action="field" data-field="topup" data-id="${escapeHTML(order.id)}"></td>
       <td><select class="method-select" data-action="field" data-field="shipMethod" data-id="${escapeHTML(order.id)}">
         ${["7-11","全家","萊爾富","OK","郵寄","面交"].map(m=>`<option value="${m}" ${order.shipMethod===m?"selected":""}>${m}</option>`).join("")}</select></td>
-      <td><input type="text" class="ship-input" value="${escapeHTML(order.shipCode)}" placeholder="寄件單號" data-action="field" data-field="shipCode" data-id="${escapeHTML(order.id)}"></td>
       <td><textarea class="note-input" placeholder="備註" data-action="field" data-field="note" data-id="${escapeHTML(order.id)}">${escapeHTML(order.note)}</textarea></td>`;
     body.appendChild(tr);
   });
+  updateSelectVisibleCheckbox();
 }
+
+function getSelectedOrders(){return orderList.filter(o=>selectedOrderIds.has(o.id));}
+function updateSelectVisibleCheckbox(){
+  const checkbox=$("selectVisibleOrders");if(!checkbox)return;
+  const keyword=$("searchInput").value.toLowerCase().trim(),group=$("groupFilter").value,payment=$("paymentFilter").value,arrival=$("arrivalFilter").value;
+  const visible=orderList.filter(o=>{
+    const search=[o.buyerName,o.groupName,o.note,...(o.products||[]).map(p=>p.name)].join(" ").toLowerCase();
+    const products=o.products||[],allArrived=products.length>0&&products.every(p=>p.isArrived===true);
+    return (!keyword||search.includes(keyword))&&(!group||o.groupName===group)&&(!payment||(payment==="paid"?o.isPaid===true:o.isPaid!==true))&&(!arrival||(arrival==="arrived"?allArrived:!allArrived));
+  });
+  const count=visible.filter(o=>selectedOrderIds.has(o.id)).length;
+  checkbox.checked=visible.length>0&&count===visible.length;
+  checkbox.indeterminate=count>0&&count<visible.length;
+}
+function selectedOrdersText(orders){
+  return orders.map(o=>{
+    const products=(o.products||[]).map(p=>`・${p.name||"（未填商品）"} × ${Number(p.quantity)||1}${p.isArrived?"（已到貨）":"（未到貨）"}`).join("\n")||"・無商品資料";
+    return `【買家：${o.buyerName||"未填姓名"}】\n開團：${o.groupName||"未命名開團"}\n商品：\n${products}\n總金額：$${(Number(o.amount)||0).toLocaleString()}\n付款狀態：${o.isPaid?"已收款":"未收款"}\n二補金額：$${(Number(o.topup)||0).toLocaleString()}\n物流方式：${o.shipMethod||"未指定"}\n備註：${o.note||"無"}`;
+  }).join("\n\n------------------------------\n\n");
+}
+function downloadTextFile(){
+  const orders=getSelectedOrders();if(!orders.length){alert("請先勾選要匯出的訂單。");return;}
+  const content="\uFEFF📦 訂單通知明細\n匯出日期："+new Date().toLocaleDateString("zh-TW")+"\n共 "+orders.length+" 筆訂單\n\n"+selectedOrdersText(orders);
+  const blob=new Blob([content],{type:"text/plain;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");
+  const d=new Date(),date=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+  a.href=url;a.download=`選取訂單明細_${date}.txt`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+function printSelectedOrders(){
+  const orders=getSelectedOrders();if(!orders.length){alert("請先勾選要列印的訂單。");return;}
+  const rows=orders.map((o,i)=>{
+    const products=(o.products||[]).map(p=>`<li>${escapeHTML(p.name||"（未填商品）")} × ${Number(p.quantity)||1}　${p.isArrived?"☑ 已到貨":"□ 未到貨"}</li>`).join("");
+    return `<article class="order"><h2>${i+1}. ${escapeHTML(o.buyerName||"未填姓名")}</h2><p><b>開團：</b>${escapeHTML(o.groupName||"未命名開團")}</p><p><b>商品：</b></p><ul>${products||"<li>無商品資料</li>"}</ul><p><b>總金額：</b>$${(Number(o.amount)||0).toLocaleString()}　 <b>二補：</b>$${(Number(o.topup)||0).toLocaleString()}</p><p><b>付款：</b>${o.isPaid?"已收款":"未收款"}　 <b>物流：</b>${escapeHTML(o.shipMethod||"未指定")}</p><p><b>備註：</b>${escapeHTML(o.note||"無")}</p><p class="packing">□ 已撿貨　 □ 已包裝　 □ 已寄出</p></article>`;
+  }).join("");
+  const win=window.open("","_blank");if(!win){alert("瀏覽器封鎖了列印視窗，請允許此網站開啟彈出式視窗後再試一次。");return;}
+  win.document.write(`<!DOCTYPE html><html lang="zh-TW"><head><meta charset="UTF-8"><title>出貨明細</title><style>body{font-family:Arial,"Microsoft JhengHei",sans-serif;color:#222;padding:20px}h1{font-size:22px;margin-bottom:6px}.meta{color:#666;margin-bottom:20px}.order{border:1px solid #bbb;border-radius:8px;padding:14px;margin:0 0 16px;break-inside:avoid}.order h2{font-size:18px;margin:0 0 10px}.order p{margin:6px 0;line-height:1.5}ul{margin:4px 0 10px;padding-left:24px}li{margin:4px 0}.packing{border-top:1px dashed #aaa;padding-top:8px;font-weight:bold}@media print{body{padding:0}.order{break-inside:avoid}}</style></head><body><h1>📦 出貨明細</h1><div class="meta">列印日期：${new Date().toLocaleDateString("zh-TW")}｜共 ${orders.length} 筆訂單</div>${rows}<script>window.onload=()=>window.print();<\/script></body></html>`);
+  win.document.close();
+}
+
 function getOrder(id){return orderList.find(o=>o.id===id);}
 async function updateField(id,field,value){
   const o=getOrder(id);if(!o)return;
@@ -265,7 +307,7 @@ async function addOrder(){
 async function deleteOrder(id){
   const o=getOrder(id);if(!o)return;
   if(!confirm(`確定要刪除 ${o.buyerName?`「${o.buyerName}」`:"這筆訂單"} 嗎？\n\n刪除後會同步刪除所有人的雲端資料。`))return;
-  try{setSyncStatus("正在刪除訂單…");await deleteCloudOrder(id);orderList=orderList.filter(x=>x.id!==id);localBackup();updateStats();updateGroupFilter();renderTable();setSyncStatus("已刪除並同步");}
+  try{setSyncStatus("正在刪除訂單…");await deleteCloudOrder(id);orderList=orderList.filter(x=>x.id!==id);selectedOrderIds.delete(id);localBackup();updateStats();updateGroupFilter();renderTable();setSyncStatus("已刪除並同步");}
   catch(e){alert("刪除失敗："+formatError(e));setSyncStatus("刪除失敗："+formatError(e),true);}
 }
 async function addProduct(id){const o=getOrder(id);if(!o)return;o.products.push(createProduct());renderTable();await saveOrder(o);}
@@ -341,7 +383,7 @@ async function resetAll(){
   try{
     const {error}=await supabaseClient.from(TABLE_NAME).delete().not("id","is",null);
     if(error)throw error;
-    orderList=[];localBackup();updateStats();updateGroupFilter();renderTable();setSyncStatus("雲端訂單已清空");
+    orderList=[];selectedOrderIds.clear();localBackup();updateStats();updateGroupFilter();renderTable();setSyncStatus("雲端訂單已清空");
   }catch(e){alert("清空失敗："+formatError(e));setSyncStatus("清空失敗："+formatError(e),true);}
   finally{setBusy(false);}
 }
@@ -364,7 +406,7 @@ async function enterApp(user){
 }
 async function logout(){
   try{await supabaseClient.auth.signOut();}catch(e){alert("登出時發生問題："+formatError(e));}
-  currentUser=null;cloudReady=false;orderList=[];appSection.classList.add("hidden");loginSection.classList.remove("hidden");$("passwordInput").value="";$("loginStatus").classList.add("hidden");
+  currentUser=null;cloudReady=false;orderList=[];selectedOrderIds.clear();appSection.classList.add("hidden");loginSection.classList.remove("hidden");$("passwordInput").value="";$("loginStatus").classList.add("hidden");
 }
 function wireEvents(){
   $("loginBtn").addEventListener("click",login);
@@ -374,6 +416,17 @@ function wireEvents(){
   ["searchInput","groupFilter","paymentFilter","arrivalFilter"].forEach(id=>$(id).addEventListener(id==="searchInput"?"input":"change",renderTable));
   $("clearFilterBtn").addEventListener("click",clearFilters);
   $("exportCsvBtn").addEventListener("click",exportData);
+  $("exportSelectedTxtBtn").addEventListener("click",downloadTextFile);
+  $("printSelectedBtn").addEventListener("click",printSelectedOrders);
+  $("selectVisibleOrders").addEventListener("change",e=>{
+    const keyword=$("searchInput").value.toLowerCase().trim(),group=$("groupFilter").value,payment=$("paymentFilter").value,arrival=$("arrivalFilter").value;
+    const visible=orderList.filter(o=>{
+      const search=[o.buyerName,o.groupName,o.note,...(o.products||[]).map(p=>p.name)].join(" ").toLowerCase();
+      const products=o.products||[],allArrived=products.length>0&&products.every(p=>p.isArrived===true);
+      return (!keyword||search.includes(keyword))&&(!group||o.groupName===group)&&(!payment||(payment==="paid"?o.isPaid===true:o.isPaid!==true))&&(!arrival||(arrival==="arrived"?allArrived:!allArrived));
+    });
+    visible.forEach(o=>e.target.checked?selectedOrderIds.add(o.id):selectedOrderIds.delete(o.id));renderTable();
+  });
   $("importCsvBtn").addEventListener("click",()=>$("importFile").click());
   $("importFile").addEventListener("change",async function(){const f=this.files[0];this.value="";await replaceCloudData(f);});
   $("mergeJsonBtn").addEventListener("click",()=>$("mergeFile").click());
@@ -382,7 +435,8 @@ function wireEvents(){
   // 將同一張表內的操作用事件委派處理，避免每次重繪都重綁
   $("orderTableBody").addEventListener("change",async e=>{
     const el=e.target,action=el.dataset.action,id=el.dataset.id,index=Number(el.dataset.index);
-    if(action==="field")await updateField(id,el.dataset.field,el.value);
+    if(action==="select-order"){if(el.checked)selectedOrderIds.add(id);else selectedOrderIds.delete(id);updateSelectVisibleCheckbox();}
+    else if(action==="field")await updateField(id,el.dataset.field,el.value);
     else if(action==="product-field")await updateProduct(id,index,el.dataset.field,el.value);
     else if(action==="toggle-arrived")await toggleProductArrived(id,index);
   });

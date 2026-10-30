@@ -302,7 +302,6 @@ async function updateField(id,field,value){
 async function addOrder(){
   if(isBusy)return;const o=createOrder();orderList.push(o);updateStats();updateGroupFilter();renderTable();
   await saveOrder(o);
-  window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});
 }
 async function deleteOrder(id){
   const o=getOrder(id);if(!o)return;
